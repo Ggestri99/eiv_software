@@ -1,0 +1,20 @@
+<mat-card class="example-card">
+  <mat-card-content>
+    <div>
+      <div>
+        <button mat-icon-button (click)="cerrarModal()" class="cerrar-icon">
+          <mat-icon style="color: red;">close</mat-icon>
+        </button>
+      </div>
+      <div>
+        <span class="example-card-title" style="font-size: 20px;">Observaciones de {{data.name}}</span>
+      </div>
+    </div>
+    <div class="content-obs">
+      <p>
+        {{data.obs}}
+      </p>
+    </div>
+
+  </mat-card-content>
+</mat-card>

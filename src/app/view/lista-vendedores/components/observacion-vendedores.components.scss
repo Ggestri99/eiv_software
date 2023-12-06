@@ -1,0 +1,22 @@
+.cerrar-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
+}
+
+.list-unstyled {
+  margin-top: 22px;
+}
+
+mat-card-content {
+  height: 200px;
+}
+
+.content-obs {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 38px;
+}
