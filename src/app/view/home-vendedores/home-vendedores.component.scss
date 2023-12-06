@@ -1,0 +1,44 @@
+.home {
+    background-color: #373c46 !important;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+span {
+    letter-spacing: 0.1em;
+    color: #ffff !important;
+}
+
+.link-fx {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    color: inherit;
+    transition: color 0.5s ease; /* Agregamos una transición al color del texto */
+  }
+  
+  .border-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .border-container::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #63a9df;
+    transition: width 2.5s ease; /* Transición de 5 segundos para la anchura */
+  }
+  
+  .border-container:hover::before {
+    width: 100%;
+  }
+  
+
+  
+
