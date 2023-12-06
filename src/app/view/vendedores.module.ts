@@ -10,6 +10,13 @@ import { HomeVendedoresComponent } from './home-vendedores/home-vendedores.compo
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatCardModule} from '@angular/material/card';
+import { ObservacionesVendedoresComponent } from './lista-vendedores/components/observacion-vendedores.components';
+import { MatDialogModule } from '@angular/material/dialog';
+
+
 
 @NgModule({
   declarations: [
@@ -17,6 +24,7 @@ import {MatButtonModule} from '@angular/material/button';
     ListaVendedoresComponent,
     ErrorPageComponent,
     HomeVendedoresComponent,
+    ObservacionesVendedoresComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +33,11 @@ import {MatButtonModule} from '@angular/material/button';
     // Angular material
     MatButtonModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatDialogModule
   ]
 })
 export class VendedoresModule { }
