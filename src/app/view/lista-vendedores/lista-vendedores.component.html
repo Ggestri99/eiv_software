@@ -53,8 +53,8 @@
                 <div class="pointer" (click)="redirectToEditPage(vendedor)">
                     <i class="fa-solid fa-pen-to-square" style="color: #1552bc; font-size: 22px;"></i>
                 </div>
-
-                <div class="pointer"><i class="fa-solid fa-trash-can" style="color: #e20303; font-size: 22px;"></i>
+                <div (click)="delete(vendedor)" class="pointer"><i class="fa-solid fa-trash-can"
+                        style="color: #e20303; font-size: 22px;"></i>
                 </div>
             </div>
         </div>

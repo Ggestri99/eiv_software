@@ -1,0 +1,34 @@
+.content-text {
+    flex-direction: column;
+    align-items: center;
+}
+
+.cerrar-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1;
+  }
+
+  .cerrar-icon:hover {
+    background-color: white;
+  }
+  
+  .list-unstyled {
+    margin-top: 22px;
+  }
+  
+  mat-card-content {
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .content-obs {
+    display: block;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 38px;
+  }

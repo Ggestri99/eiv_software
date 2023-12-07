@@ -1,0 +1,30 @@
+<mat-card class="example-card">
+  <mat-card-content>
+    <div>
+      <div>
+        <button mat-icon-button class="cerrar-icon" (click)="cerrarModal(false)">
+          <mat-icon style="color: red;">close</mat-icon>
+        </button>
+      </div>
+      <div class="d-flex content-text">
+        <span class="example-card-title" style="font-size: 20px;">Estas por eliminar al vendedor</span>
+        <span style="font-size: 20px; font-weight: 500;">{{data.nombre}}</span>
+      </div>
+    </div>
+    <div class="content-obs">
+      <div class="row">
+        <div class="col-md-12 ">
+          <div class="" style="display: flex;justify-content: space-around;">
+            <div class="back">
+              <button mat-flat-button color="warn" (click)="cerrarModal(false)">Cancelar</button>
+            </div>
+            <div>
+              <button mat-flat-button color="primary" (click)="cerrarModal(true)">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </mat-card-content>
+</mat-card>
