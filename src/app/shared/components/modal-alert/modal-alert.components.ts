@@ -12,7 +12,6 @@ export class ModalAlertComponent {
     public dialogRef: MatDialogRef<ListaVendedoresComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    console.log(data)
   }
 
   cerrarModal(eliminar: boolean): void {

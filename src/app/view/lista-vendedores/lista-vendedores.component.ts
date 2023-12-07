@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ListaVendedoresComponent {
   vendedores: Vendedor[] = []
+  vistaTabla: boolean = true
 
   constructor(
     private router: Router,
@@ -47,7 +48,7 @@ export class ListaVendedoresComponent {
   redirectToEditPage(vendedor: Vendedor) {
     this.router.navigate(['/formulario', vendedor.id]);
   }
-  
+
   delete(vendedor: Vendedor) {
     const dialogRef = this.dialog.open(ModalAlertComponent, {
       height: '200px',
@@ -66,16 +67,27 @@ export class ListaVendedoresComponent {
           this.actualizarListaVendedores();
         });
       } else {
-        console.log('No se ejecutó', result);
       }
     });
   }
 
-  private mostrarSnackbarBorrar(mensaje:string) {
+  private mostrarSnackbarBorrar(mensaje: string) {
     this.snackBar.open(mensaje, 'Cerrar', {
       duration: 2500,
       horizontalPosition: 'end',
       verticalPosition: 'top',
     });
   }
+
+
+
+  verTabla() {
+    const condicion = this.vistaTabla
+    if(this.vistaTabla) {
+      this.vistaTabla = false
+    } else {
+      this.vistaTabla = true
+    }
+  }
+
 }
