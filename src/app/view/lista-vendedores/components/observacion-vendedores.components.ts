@@ -11,7 +11,6 @@ export class ObservacionesVendedoresComponent {
     public dialogRef: MatDialogRef<ObservacionesVendedoresComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    console.log(data)
   }
 
   cerrarModal(): void {

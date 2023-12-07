@@ -34,7 +34,6 @@ export class VendedorService {
   }
 
   deleteVendedor(id: number): Observable<void> {
-    console.log(id)
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 

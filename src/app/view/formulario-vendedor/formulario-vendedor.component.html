@@ -1,10 +1,11 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
         <div class="d-flex pointer">
-            <i [routerLink]="'/home'" class="fa-solid fa-house" style="color: #ffffff;"></i>
+            <i [routerLink]="'/home'" class="fa-solid fa-house pointer" style="color: #ffffff;font-size: 40px;"></i>
         </div>
         <div class="w-100 d-flex justify-content-center">
-            <h4>Formulario de creacion</h4>
+            <h4 *ngIf="!id">Formulario de Creacion de Vendedor</h4>
+            <h4 *ngIf="id">Formulario de Edicion de Vendedor</h4>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -30,12 +31,16 @@
                     <mat-form-field appearance="outline" class="example-full-width">
                         <mat-label>Nombre</mat-label>
                         <input matInput formControlName="nombre" />
+                        <!-- Agrega el mensaje de validación -->
+                        <mat-error *ngIf="myForm.get('nombre')?.hasError('required')">Este campo es obligatorio</mat-error>
                     </mat-form-field>
                 </div>
+                
                 <div class="col-md-6 d-flex justify-content-center">
                     <mat-form-field appearance="outline" class="example-full-width">
                         <mat-label>Usuario Login</mat-label>
                         <input matInput formControlName="usuarioLogin" />
+                        <mat-error *ngIf="myForm.get('usuarioLogin')?.hasError('required')">Este campo es obligatorio</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -48,6 +53,7 @@
                                 <span>{{ localidad.localidad }}</span>
                             </mat-option>
                         </mat-select>
+                        <mat-error *ngIf="myForm.get('localidadId')?.hasError('required')">Este campo es obligatorio</mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-md-6 d-flex justify-content-center">
@@ -56,11 +62,10 @@
                         <input matInput [matDatepicker]="picker" formControlName="fechaNacimiento" matInput>
                         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
-                        <mat-error *ngIf="myForm.get('fechaNacimiento')?.hasError('required')">La fecha de nacimiento es
+                        <mat-error *ngIf="myForm.get('fechaNacimiento')?.hasError('required')">Este campo es
                             obligatoria</mat-error>
-                        <mat-error *ngIf="myForm.get('fechaNacimiento')?.hasError('rangoEdadInvalido')">La fecha de
+                        <mat-error style="width: 320px;" *ngIf="myForm.get('fechaNacimiento')?.hasError('rangoEdadInvalido')">La fecha de
                             nacimiento debe estar entre 18 y 65 años</mat-error>
-
                     </mat-form-field>
                 </div>
 
@@ -68,24 +73,24 @@
             <div class="row d-flex justify-content-center">
                 <div class=" d-flex justify-content-center slider">
                     <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Textarea</mat-label>
+                        <mat-label>Observaciones</mat-label>
                         <textarea matInput formControlName="observaciones"></textarea>
                     </mat-form-field>
-                    <p *ngIf="slideToggleValue">Habilitado a operar</p>
-                    <p *ngIf="!slideToggleValue">No habilitado a operar</p>
-                    <mat-slide-toggle (change)="onSlideToggleChange($event)">
-                    </mat-slide-toggle>
+                    <mat-slide-toggle formControlName="habilitado" (change)="onSlideToggleChange($event)">
+                        {{ myForm.get('habilitado')?.value ? 'Habilitado a operar' : 'No habilitado a operar' }}
+                      </mat-slide-toggle>
+                      
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 ">
                     <div class="" style="display: flex;justify-content: space-around;">
                         <div class="back">
-                            <button mat-flat-button color="primary" [routerLink]="'/listado'">Volver</button>
+                            <button mat-flat-button color="primary" [routerLink]="'/listado'">Cancelar</button>
                         </div>
                         <div>
                             <button *ngIf="!id else editButton" mat-flat-button color="primary" [disabled]="!myForm.valid"
-                                (click)="enviarFormulario()">Enviar</button>
+                                (click)="enviarFormulario()">Crear</button>
                                 <ng-template #editButton>
                                     <button *ngIf="id" mat-flat-button color="primary" [disabled]="!myForm.valid"
                                     (click)="editarFormulario()">Editar</button>

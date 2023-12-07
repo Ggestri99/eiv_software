@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SharedModule } from '../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -54,8 +55,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatDatepickerModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatSnackBarModule
-
+    MatSnackBarModule,
+    MatTableModule
   ]
 })
 export class VendedoresModule { }

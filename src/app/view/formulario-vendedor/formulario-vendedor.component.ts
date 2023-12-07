@@ -1,16 +1,18 @@
 import { Component, DestroyRef, Input, OnInit, inject, numberAttribute } from '@angular/core';
 import { VendedorService } from '../../services/vendedor.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { Localidad } from '../../shared/models/localidades.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-formulario-vendedor',
   templateUrl: './formulario-vendedor.component.html',
   styleUrls: ['./formulario-vendedor.component.scss'],
+  providers: [DatePipe],
 })
 export class FormularioVendedorComponent implements OnInit {
   @Input({ transform: numberAttribute }) id!: number;
@@ -19,14 +21,15 @@ export class FormularioVendedorComponent implements OnInit {
   myForm: FormGroup;
   selectedValue?: string;
   imageUrl: any = '';
-  slideToggleValue: boolean = false;
+  slideToggleValue: boolean = true;
   constructor(
     private vendedorService: VendedorService,
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private localidadService: LocalidadService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private datePipe: DatePipe
 
   ) {
     this.myForm = this.fb.group({
@@ -35,7 +38,7 @@ export class FormularioVendedorComponent implements OnInit {
       localidadId: ['', Validators.required],
       nombre: ['', Validators.required],
       usuarioLogin: ['', Validators.required],
-      observaciones: ['']
+      observaciones: [''],
     });
     this.myForm.get('fechaNacimiento')?.setValidators([Validators.required, this.fechaNacimientoValidator.bind(this)]);
     this.localidadService.getAllLocalidades()
@@ -43,19 +46,19 @@ export class FormularioVendedorComponent implements OnInit {
       .subscribe(localidades => {
         this.localidades = localidades
       })
-
   }
 
   ngOnInit() {
     if (this.id) {
       this.vendedorService.getVendedorById(this.id).subscribe(vendedor => {
+        const habilitado = !!vendedor.habilitado;
         this.myForm.patchValue({
           fechaNacimiento: vendedor.fechaNacimiento,
-          habilitado: vendedor.habilitado,
+          habilitado: habilitado,
           localidadId: vendedor.localidad?.id,
           nombre: vendedor.nombre,
           usuarioLogin: vendedor.usuarioLogin,
-          observaciones: vendedor.observaciones
+          observaciones: vendedor.observaciones,
         });
       });
     }
@@ -66,8 +69,7 @@ export class FormularioVendedorComponent implements OnInit {
           this.imageUrl = imageUrl;
         },
         (error) => {
-          console.error('Error al obtener la foto del vendedor', error);
-          // Maneja el error según sea necesario
+          this.mostrarSnackbarError(`Hubo un error al crear, ${error} `);
         }
       );
     }
@@ -76,15 +78,13 @@ export class FormularioVendedorComponent implements OnInit {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
-    console.log(file)
 
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imageUrl = e.target?.result;
-        console.log(this.imageUrl)
       };
-      console.log(reader.readAsDataURL(file))
+      reader.readAsDataURL(file)
 
       const idVendedor = this.id;
 
@@ -92,11 +92,10 @@ export class FormularioVendedorComponent implements OnInit {
         this.vendedorService.subirFotoVendedor(idVendedor, file)
           .subscribe(
             () => {
-              console.log('Foto subida exitosamente');
               this.vendedorService.getFotoVendedor(idVendedor);
             },
             (error) => {
-              console.error('Error al subir la foto', error);
+              this.mostrarSnackbarError(`Hubo un error al crear, ${error} `);
             }
           );
       } else {
@@ -119,7 +118,7 @@ export class FormularioVendedorComponent implements OnInit {
     });
   }
 
-  private mostrarSnackbarEditar(mensaje:string) {
+  private mostrarSnackbarEditar(mensaje: string) {
     this.snackBar.open(mensaje, 'Cerrar', {
       duration: 3000,
       horizontalPosition: 'end',
@@ -143,7 +142,7 @@ export class FormularioVendedorComponent implements OnInit {
         this.router.navigate(['/listado']);
       },
       (error) => {
-        console.error('Error al Editar vendedor:', error);
+        this.mostrarSnackbarError(`Hubo un error al crear, ${error} `);
       }
     );
   }
@@ -165,10 +164,17 @@ export class FormularioVendedorComponent implements OnInit {
         this.router.navigate(['/listado']);
       },
       (error) => {
-        console.error('Error al crear vendedor:', error);
-
+        this.mostrarSnackbarError(`Hubo un error al crear, ${error} `);
       }
     );
+  }
+
+  private mostrarSnackbarError(mensaje: string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 2500,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 
   fechaNacimientoValidator(control: any): { [key: string]: boolean } | null {
@@ -197,7 +203,15 @@ export class FormularioVendedorComponent implements OnInit {
   }
 
   setLocalidad(id: number | string) {
-    console.log(id)
+    id
+  }
+
+  obtenerFechaFormateada(fecha: string | null | undefined): string {
+    if (fecha) {
+      const fechaDate = new Date(fecha);
+      return this.datePipe.transform(fechaDate, 'dd/MM/yyyy') || '';
+    }
+    return '';
   }
 
 }
