@@ -37,9 +37,7 @@ export class FormularioVendedorComponent {
     this.localidadService.getAllLocalidades().subscribe(localidades => {
       this.localidades = localidades
     })
-
   }
-
 
   onFileChange(event: any) {
     const file = event.target.files[0];
