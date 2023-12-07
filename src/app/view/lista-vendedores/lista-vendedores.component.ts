@@ -45,6 +45,7 @@ export class ListaVendedoresComponent {
   redirectToEditPage(vendedor: Vendedor) {
     this.router.navigate(['/formulario', vendedor.id]);
   }
+  
   delete(vendedor: Vendedor) {
     const dialogRef = this.dialog.open(ModalAlertComponent, {
       height: '200px',

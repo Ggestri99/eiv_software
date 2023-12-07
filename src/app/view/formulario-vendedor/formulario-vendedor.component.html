@@ -10,10 +10,10 @@
 </mat-toolbar>
 
 
-<div [ngClass]="{'centered-content mt-4': idEditVendedor, 'centered-content mt-9': !idEditVendedor}" >
+<div [ngClass]="{'centered-content mt-4': id, 'centered-content mt-9': !id}" >
     <div class="content d-flex justify-content-center">
         <form [formGroup]="myForm">
-            <div class="row" *ngIf="idEditVendedor">
+            <div class="row" *ngIf="id">
                 <div class="col-md-12 d-flex justify-content-center">
                     <div class="image-upload-container">
                         <input type="file" (change)="onFileChange($event)" />
@@ -73,7 +73,6 @@
                     <mat-slide-toggle (change)="onSlideToggleChange($event)">
                     </mat-slide-toggle>
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-md-12 ">
@@ -82,10 +81,10 @@
                             <button mat-flat-button color="primary" [routerLink]="'/listado'">Volver</button>
                         </div>
                         <div>
-                            <button *ngIf="!idEditVendedor else editButton" mat-flat-button color="primary" [disabled]="!myForm.valid"
+                            <button *ngIf="!id else editButton" mat-flat-button color="primary" [disabled]="!myForm.valid"
                                 (click)="enviarFormulario()">Enviar</button>
                                 <ng-template #editButton>
-                                    <button *ngIf="idEditVendedor" mat-flat-button color="primary" [disabled]="!myForm.valid"
+                                    <button *ngIf="id" mat-flat-button color="primary" [disabled]="!myForm.valid"
                                     (click)="editarFormulario()">Editar</button>
                                 </ng-template>                       
                         </div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject, numberAttribute } from '@angular/core';
 import { VendedorService } from '../../services/vendedor.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { Localidad } from '../../shared/models/localidades.models';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-formulario-vendedor',
@@ -11,12 +12,13 @@ import { Localidad } from '../../shared/models/localidades.models';
   styleUrls: ['./formulario-vendedor.component.scss'],
 })
 export class FormularioVendedorComponent implements OnInit {
+  @Input({transform:numberAttribute}) id!: number;
+  #destroyRef = inject(DestroyRef)
   localidades: Localidad[] = [];
   myForm: FormGroup;
   selectedValue?: string;
   imageUrl: any = '';
   slideToggleValue: boolean = false;
-  idEditVendedor!: number
   constructor(
     private vendedorService: VendedorService,
     private fb: FormBuilder,
@@ -34,18 +36,17 @@ export class FormularioVendedorComponent implements OnInit {
       observaciones: ['']
     });
     this.myForm.get('fechaNacimiento')?.setValidators([Validators.required, this.fechaNacimientoValidator.bind(this)]);
-    this.localidadService.getAllLocalidades().subscribe(localidades => {
+    this.localidadService.getAllLocalidades()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(localidades => {
       this.localidades = localidades
     })
 
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      const id = params['id'];
-      this.idEditVendedor = id
-      if (id) {
-        this.vendedorService.getVendedorById(id).subscribe(vendedor => {
+      if (this.id) {
+        this.vendedorService.getVendedorById(this.id).subscribe(vendedor => {
           this.myForm.patchValue({
             fechaNacimiento: vendedor.fechaNacimiento,
             habilitado: vendedor.habilitado,
@@ -56,13 +57,10 @@ export class FormularioVendedorComponent implements OnInit {
           });
         });
       }
-    });
-    console.log(this.idEditVendedor)
-    if (this.idEditVendedor) {
-      this.vendedorService.getFotoVendedor(this.idEditVendedor).subscribe(
+    if (this.id) {
+      this.vendedorService.getFotoVendedor(this.id).subscribe(
         (data: any) => {
           const imageUrl = URL.createObjectURL(data);
-          console.log(imageUrl);
           this.imageUrl = imageUrl;
         },
         (error) => {
@@ -86,7 +84,7 @@ export class FormularioVendedorComponent implements OnInit {
       };
       console.log(reader.readAsDataURL(file))
 
-      const idVendedor = this.idEditVendedor;
+      const idVendedor = this.id;
 
       if (idVendedor) {
         this.vendedorService.subirFotoVendedor(idVendedor, file)
@@ -121,7 +119,7 @@ editarFormulario() {
     observaciones: formData.observaciones,
     localidadId: formData.localidadId,
   };
-  this.vendedorService.updateVendedor(this.idEditVendedor, vendedorData).subscribe(
+  this.vendedorService.updateVendedor(this.id, vendedorData).subscribe(
     (response) => {
       console.log('Vendedor Editado exitosamente:', response);
       // this.router.navigate(['/listado']);
