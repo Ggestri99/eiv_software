@@ -34,23 +34,28 @@
                 <div class="content-localiad">
                     <div class="localidad">
                         <h4>
-                            {{vendedor.localidad.localidad}}
+                            {{vendedor.localidad?.localidad}}
                         </h4>
                     </div>
                     <div>
                         <h5>
                             <span>Codigo postal:</span>
-                            {{vendedor.localidad.codigoPostal}}
+                            {{vendedor.localidad?.codigoPostal}}
                         </h5>
                     </div>
                 </div>
             </div>
             <div class="d-flex align-items-center content-icon-action">
-                <div *ngIf="vendedor.observaciones !== null && vendedor.observaciones !== undefined" class="pointer" (click)="openDialog(vendedor.observaciones, vendedor.nombre)">
+                <div *ngIf="vendedor.observaciones !== null && vendedor.observaciones !== undefined" class="pointer"
+                    (click)="openDialog(vendedor.observaciones, vendedor.nombre)">
                     <i class="fa-solid fa-eye" style="color: #1552bc; font-size: 22px;"></i>
-                  </div>
-                                  <div class="pointer"><i class="fa-solid fa-pen-to-square" style="color: #1552bc; font-size: 22px;"></i></div>
-                <div class="pointer"><i class="fa-solid fa-trash-can" style="color: #e20303; font-size: 22px;"></i></div>
+                </div>
+                <div class="pointer" (click)="redirectToEditPage(vendedor)">
+                    <i class="fa-solid fa-pen-to-square" style="color: #1552bc; font-size: 22px;"></i>
+                </div>
+
+                <div class="pointer"><i class="fa-solid fa-trash-can" style="color: #e20303; font-size: 22px;"></i>
+                </div>
             </div>
         </div>
     </div>

@@ -11,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeVendedoresComponent },
       { path: 'formulario', component: FormularioVendedorComponent },
+      { path: 'formulario/:id', component: FormularioVendedorComponent },
       { path: 'listado', component: ListaVendedoresComponent },
       { path: 'error', component: ErrorPageComponent },
     ]

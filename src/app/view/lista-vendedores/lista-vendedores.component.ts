@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { VendedorService } from 'src/app/services/vendedor.service';
-import { Vendedor } from 'src/app/shared/models/vendedor.models';
+import { GetVendedor, Vendedor } from 'src/app/shared/models/vendedor.models';
 import { ObservacionesVendedoresComponent } from './components/observacion-vendedores.components';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-vendedores',
@@ -11,29 +11,32 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./lista-vendedores.component.scss']
 })
 export class ListaVendedoresComponent {
-  vendedores:any
+  vendedores: Vendedor[] = []
   constructor(
-    private vendedorService:VendedorService,
+    private router: Router,
+    private vendedorService: VendedorService,
     public dialog: MatDialog
   ) {
-    this.vendedorService.getAllVendedores().subscribe(data=>{
+    this.vendedorService.getAllVendedores().subscribe(data => {
       this.vendedores = data
     })
   }
 
-
-  openDialog(obs:string,name:string) {
+  openDialog(obs: string, name: string) {
     const dialogRef = this.dialog.open(ObservacionesVendedoresComponent, {
       height: '200px',
       width: '400px',
       data: {
-       obs:obs,
-       name:name
+        obs: obs,
+        name: name
       },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       result
     });
+  }
 
+  redirectToEditPage(vendedor: Vendedor) {
+    this.router.navigate(['/formulario', vendedor.id]);
   }
 }
