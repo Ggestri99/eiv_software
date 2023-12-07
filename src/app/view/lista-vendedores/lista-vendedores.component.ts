@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { Vendedor } from 'src/app/shared/models/vendedor.models';
 import { ObservacionesVendedoresComponent } from './components/observacion-vendedores.components';
+import { ModalAlertComponent } from 'src/app/shared/components/modal-alert/modal-alert.components';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -11,29 +11,54 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./lista-vendedores.component.scss']
 })
 export class ListaVendedoresComponent {
-  vendedores:any
+  vendedores: any;
+
   constructor(
-    private vendedorService:VendedorService,
+    private vendedorService: VendedorService,
     public dialog: MatDialog
   ) {
-    this.vendedorService.getAllVendedores().subscribe(data=>{
-      this.vendedores = data
-    })
+    this.actualizarListaVendedores();
   }
 
+  private actualizarListaVendedores() {
+    this.vendedorService.getAllVendedores().subscribe(data => {
+      this.vendedores = data;
+    });
+  }
 
-  openDialog(obs:string,name:string) {
+  openDialog(obs: string, name: string) {
     const dialogRef = this.dialog.open(ObservacionesVendedoresComponent, {
       height: '200px',
       width: '400px',
       data: {
-       obs:obs,
-       name:name
+        obs: obs,
+        name: name
       },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
-      result
+      result;
     });
+  }
 
+  delete(vendedor: Vendedor) {
+    const dialogRef = this.dialog.open(ModalAlertComponent, {
+      height: '200px',
+      width: '380px',
+      data: {
+        nombre: vendedor.nombre,
+        id: vendedor.id
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        console.log(result);
+        this.vendedorService.deleteVendedor(vendedor.id).subscribe(() => {
+          // Después de borrar, actualiza la lista de vendedores
+          this.actualizarListaVendedores();
+        });
+      } else {
+        console.log('No se ejecutó', result);
+      }
+    });
   }
 }
