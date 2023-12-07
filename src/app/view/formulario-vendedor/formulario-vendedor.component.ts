@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LocalidadService } from 'src/app/services/localidad.service';
 import { Localidad } from '../../shared/models/localidades.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-formulario-vendedor',
@@ -12,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./formulario-vendedor.component.scss'],
 })
 export class FormularioVendedorComponent implements OnInit {
-  @Input({transform:numberAttribute}) id!: number;
+  @Input({ transform: numberAttribute }) id!: number;
   #destroyRef = inject(DestroyRef)
   localidades: Localidad[] = [];
   myForm: FormGroup;
@@ -24,7 +25,8 @@ export class FormularioVendedorComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private localidadService: LocalidadService
+    private localidadService: LocalidadService,
+    private snackBar: MatSnackBar
 
   ) {
     this.myForm = this.fb.group({
@@ -39,24 +41,24 @@ export class FormularioVendedorComponent implements OnInit {
     this.localidadService.getAllLocalidades()
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(localidades => {
-      this.localidades = localidades
-    })
+        this.localidades = localidades
+      })
 
   }
 
   ngOnInit() {
-      if (this.id) {
-        this.vendedorService.getVendedorById(this.id).subscribe(vendedor => {
-          this.myForm.patchValue({
-            fechaNacimiento: vendedor.fechaNacimiento,
-            habilitado: vendedor.habilitado,
-            localidadId: vendedor.localidad?.id,
-            nombre: vendedor.nombre,
-            usuarioLogin: vendedor.usuarioLogin,
-            observaciones: vendedor.observaciones
-          });
+    if (this.id) {
+      this.vendedorService.getVendedorById(this.id).subscribe(vendedor => {
+        this.myForm.patchValue({
+          fechaNacimiento: vendedor.fechaNacimiento,
+          habilitado: vendedor.habilitado,
+          localidadId: vendedor.localidad?.id,
+          nombre: vendedor.nombre,
+          usuarioLogin: vendedor.usuarioLogin,
+          observaciones: vendedor.observaciones
         });
-      }
+      });
+    }
     if (this.id) {
       this.vendedorService.getFotoVendedor(this.id).subscribe(
         (data: any) => {
@@ -104,80 +106,98 @@ export class FormularioVendedorComponent implements OnInit {
   }
 
 
-onSlideToggleChange(event: any) {
-  this.slideToggleValue = event.checked;
-  this.myForm.get('habilitado')?.setValue(this.slideToggleValue)
-}
-
-editarFormulario() {
-  const formData = this.myForm.value;
-  const vendedorData = {
-    usuarioLogin: formData.usuarioLogin,
-    nombre: formData.nombre,
-    habilitado: formData.habilitado,
-    fechaNacimiento: formData.fechaNacimiento,
-    observaciones: formData.observaciones,
-    localidadId: formData.localidadId,
-  };
-  this.vendedorService.updateVendedor(this.id, vendedorData).subscribe(
-    (response) => {
-      console.log('Vendedor Editado exitosamente:', response);
-      // this.router.navigate(['/listado']);
-    },
-    (error) => {
-      console.error('Error al Editar vendedor:', error);
-    }
-  );
-}
-
-enviarFormulario() {
-  const formData = this.myForm.value;
-  const vendedorData = {
-    usuarioLogin: formData.usuarioLogin,
-    nombre: formData.nombre,
-    habilitado: formData.habilitado,
-    fechaNacimiento: formData.fechaNacimiento,
-    observaciones: formData.observaciones,
-    localidadId: formData.localidadId,
-  };
-  this.vendedorService.addVendedor(vendedorData).subscribe(
-    (response) => {
-      console.log('Vendedor creado exitosamente:', response);
-      // this.router.navigate(['/listado']);
-    },
-    (error) => {
-      console.error('Error al crear vendedor:', error);
-    }
-  );
-}
-
-fechaNacimientoValidator(control: any): { [key: string]: boolean } | null {
-  const edadMin = 18;
-  const edadMax = 65;
-  if (control.value) {
-    const fechaNacimiento = new Date(control.value);
-    const edad = this.calcularEdad(fechaNacimiento);
-    if (edad < edadMin || edad > edadMax) {
-      return { 'rangoEdadInvalido': true };
-    }
+  onSlideToggleChange(event: any) {
+    this.slideToggleValue = event.checked;
+    this.myForm.get('habilitado')?.setValue(this.slideToggleValue)
   }
-  return null;
-}
 
-calcularEdad(fechaNacimiento: Date): number {
-  const hoy = new Date();
-  const nacimiento = new Date(fechaNacimiento);
-  let edad = hoy.getFullYear() - nacimiento.getFullYear();
-  const mesHoy = hoy.getMonth();
-  const mesNacimiento = nacimiento.getMonth();
-  if (mesNacimiento > mesHoy || (mesNacimiento === mesHoy && hoy.getDate() < nacimiento.getDate())) {
-    edad--;
+  private mostrarSnackbarCrear(mensaje: string): void {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
-  return edad;
-}
 
-setLocalidad(id: number | string) {
-  console.log(id)
-}
+  private mostrarSnackbarEditar(mensaje:string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
+  }
+
+  editarFormulario() {
+    const formData = this.myForm.value;
+    const vendedorData = {
+      usuarioLogin: formData.usuarioLogin,
+      nombre: formData.nombre,
+      habilitado: formData.habilitado,
+      fechaNacimiento: formData.fechaNacimiento,
+      observaciones: formData.observaciones,
+      localidadId: formData.localidadId,
+    };
+    this.vendedorService.updateVendedor(this.id, vendedorData).subscribe(
+      (response) => {
+        this.mostrarSnackbarEditar('Vendedor Editado exitosamente');
+        this.router.navigate(['/listado']);
+      },
+      (error) => {
+        console.error('Error al Editar vendedor:', error);
+      }
+    );
+  }
+
+  enviarFormulario() {
+    const formData = this.myForm.value;
+    const vendedorData = {
+      usuarioLogin: formData.usuarioLogin,
+      nombre: formData.nombre,
+      habilitado: formData.habilitado,
+      fechaNacimiento: formData.fechaNacimiento,
+      observaciones: formData.observaciones,
+      localidadId: formData.localidadId,
+    };
+
+    this.vendedorService.addVendedor(vendedorData).subscribe(
+      (response) => {
+        this.mostrarSnackbarCrear('Vendedor creado exitosamente');
+        this.router.navigate(['/listado']);
+      },
+      (error) => {
+        console.error('Error al crear vendedor:', error);
+
+      }
+    );
+  }
+
+  fechaNacimientoValidator(control: any): { [key: string]: boolean } | null {
+    const edadMin = 18;
+    const edadMax = 65;
+    if (control.value) {
+      const fechaNacimiento = new Date(control.value);
+      const edad = this.calcularEdad(fechaNacimiento);
+      if (edad < edadMin || edad > edadMax) {
+        return { 'rangoEdadInvalido': true };
+      }
+    }
+    return null;
+  }
+
+  calcularEdad(fechaNacimiento: Date): number {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mesHoy = hoy.getMonth();
+    const mesNacimiento = nacimiento.getMonth();
+    if (mesNacimiento > mesHoy || (mesNacimiento === mesHoy && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
+  }
+
+  setLocalidad(id: number | string) {
+    console.log(id)
+  }
 
 }

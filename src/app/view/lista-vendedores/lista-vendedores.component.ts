@@ -5,6 +5,7 @@ import { ObservacionesVendedoresComponent } from './components/observacion-vende
 import { ModalAlertComponent } from 'src/app/shared/components/modal-alert/modal-alert.components';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-vendedores',
@@ -17,7 +18,8 @@ export class ListaVendedoresComponent {
   constructor(
     private router: Router,
     private vendedorService: VendedorService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.actualizarListaVendedores();
   }
@@ -59,12 +61,21 @@ export class ListaVendedoresComponent {
       if (result) {
         const id = vendedor.id!
         this.vendedorService.deleteVendedor(id).subscribe(() => {
-          // Después de borrar, actualiza la lista de vendedores
+          const mensaje = 'Vendedor eliminado'
+          this.mostrarSnackbarBorrar(mensaje)
           this.actualizarListaVendedores();
         });
       } else {
         console.log('No se ejecutó', result);
       }
+    });
+  }
+
+  private mostrarSnackbarBorrar(mensaje:string) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: 2500,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
     });
   }
 }
