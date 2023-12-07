@@ -19,7 +19,7 @@ export class VendedorService {
   }
 
   addVendedor(vendedorData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/todos`, vendedorData);
+    return this.http.post<any>(`${this.apiUrl}`, vendedorData);
   }
 
   updateVendedor(id: number, vendedorData: any): Observable<any> {

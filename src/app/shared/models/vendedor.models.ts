@@ -1,17 +1,12 @@
-interface Localidad {
-    codigoPostal: string;
-    id: number;
-    localidad: string;
-  }
-  
+
   export interface Vendedor {
-    fechaNacimiento: string;
+    fechaNacimiento: string; 
     habilitado: boolean;
     id: number;
-    localidad: Localidad;
-    nombre: string;
+    localidad: number;
+    nombre: string; 
     observaciones: string;
-    usuarioLogin: string;
+    usuarioLogin: string; 
   }
   
  
