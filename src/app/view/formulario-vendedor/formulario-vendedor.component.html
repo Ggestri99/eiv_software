@@ -82,8 +82,12 @@
                             <button mat-flat-button color="primary" [routerLink]="'/listado'">Volver</button>
                         </div>
                         <div>
-                            <button mat-flat-button color="primary" [disabled]="!myForm.valid"
+                            <button *ngIf="!idEditVendedor else editButton" mat-flat-button color="primary" [disabled]="!myForm.valid"
                                 (click)="enviarFormulario()">Enviar</button>
+                                <ng-template #editButton>
+                                    <button *ngIf="idEditVendedor" mat-flat-button color="primary" [disabled]="!myForm.valid"
+                                    (click)="editarFormulario()">Editar</button>
+                                </ng-template>                       
                         </div>
                     </div>
                 </div>
