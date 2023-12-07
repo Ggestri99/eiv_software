@@ -16,12 +16,15 @@
             <div class="row" *ngIf="id">
                 <div class="col-md-12 d-flex justify-content-center">
                     <div class="image-upload-container">
-                        <input type="file" (change)="onFileChange($event)" />
-                        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" class="uploaded-image"
-                            style="border-radius: 115px;width: 92px;" />
+                        <label for="fileInput" class="custom-file-upload">
+                            <span>Seleccionar archivo</span>
+                            <input id="fileInput" type="file" (change)="onFileChange($event)" />
+                        </label>
+                        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" class="uploaded-image" style="border-radius: 115px; width: 92px;" />
                     </div>
                 </div>
             </div>
+                
             <div class="row">
                 <div class="col-md-6 d-flex justify-content-center">
                     <mat-form-field appearance="outline" class="example-full-width">
