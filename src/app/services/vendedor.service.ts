@@ -37,4 +37,17 @@ export class VendedorService {
     console.log(id)
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  subirFotoVendedor(id: number, file: File): Observable<void> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<void>(`${this.apiUrl}/${id}/foto`, formData);
+  }
+
+  getFotoVendedor(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}/foto`, {
+      responseType: 'blob' as 'json'
+    });
+  }
+
 }
