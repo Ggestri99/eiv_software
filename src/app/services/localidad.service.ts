@@ -7,7 +7,7 @@ import { Localidad } from '../shared/models/localidades.models';
   providedIn: 'root'
 })
 export class LocalidadService {
-  private apiUrl = 'http://localhost:8080/api/localidades';
+  private apiUrl = 'http://localhost:8081/api/localidades';
 
   constructor(private http: HttpClient) {}
 
